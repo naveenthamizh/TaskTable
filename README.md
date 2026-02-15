@@ -3,6 +3,8 @@
 A modern **Task Management Dashboard** , built with **React**, **TypeScript**, and **Vite**.  
 The application supports **sorting**, **pagination**, and **local state management** using **Context API**.
 
+**Deployment Link**: https://task-table-33li.vercel.app/
+
 ---
 
 ## ✨ Features
