@@ -1,0 +1,221 @@
+.kl-message-bar-wrapper {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  column-gap: 2px;
+  max-width: 600px;
+  padding: 8px 8px 11px 8px;
+  border-radius: 8px;
+  margin-bottom: var(--space-16);
+  position: relative;
+  box-shadow:
+    0 0 2px rgba(8, 12, 43, 0.16),
+    0 2px 4px rgba(8, 12, 43, 0.12);
+  background-color: rgba(8, 12, 43, 0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kl-message-header-label {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.kl-message-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--space-16);
+}
+
+.kl-message-bar-header > div {
+  display: flex;
+  font-size: 14px;
+  font-weight: var(--font-weight-500);
+  line-height: 20px;
+  color: var(--white);
+  gap: var(--space-16);
+  align-items: center;
+}
+
+.kl-message-bar-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.kl-message-bar-success .kl-message-bar-header {
+  color: var(--success-shade-3);
+}
+
+.kl-message-bar-warning .kl-message-bar-header {
+  color: var(--warning-shade-3);
+}
+
+.kl-message-bar-danger .kl-message-bar-header {
+  color: var(--danger-shade-3);
+}
+
+.kl-message-bar-info .kl-message-bar-header {
+  color: var(--info-shade-3);
+}
+
+.kl-message-bar-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--border-radius);
+}
+
+.kl-message-bar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  row-gap: var(--space-8);
+}
+
+.kl-message-bar-with-content {
+  min-height: 73px;
+}
+
+.kl-message-bar-content {
+  padding: 0 var(--space-20) 0 var(--space-40);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--white);
+  font-weight: 500;
+}
+
+.kl-message-bar-warning .kl-message-bar-icon {
+  fill: var(--warning-shade-2);
+}
+
+.kl-message-bar-success .kl-message-bar-icon {
+  fill: var(--success-shade-2);
+}
+
+.kl-message-bar-info .kl-message-bar-icon {
+  fill: var(--info-shade-2);
+}
+
+.kl-message-bar-danger .kl-message-bar-icon {
+  fill: var(--danger-shade-2);
+}
+
+.kl-message-bar-progress {
+  width: 0;
+  height: 3px;
+  transition: width 4.5s ease;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-radius: 8px;
+}
+
+.kl-message-bar-progress-start {
+  width: 100%;
+}
+
+.kl-message-bar-warning .kl-message-bar-progress {
+  background-color: var(--warning-tint-3);
+}
+
+.kl-message-bar-success .kl-message-bar-progress {
+  background-color: #00b300;
+}
+
+.kl-message-bar-info .kl-message-bar-progress {
+  background-color: var(--info-tint-3);
+}
+
+.kl-message-bar-danger .kl-message-bar-progress {
+  background-color: #ff4d4d;
+}
+
+.kl-message-bar-icon-success {
+  background: #00b300;
+}
+
+.kl-message-bar-icon-warning {
+  background: var(--warning-base);
+}
+.kl-message-bar-icon-danger {
+  background: #ff4d4d;
+}
+.kl-message-bar-icon-info {
+  background: var(--info-base);
+}
+
+.kl-message-bar-icon-section {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+/*  sliding animations */
+
+.kl-message-bar-left-slide-in {
+  animation: 400ms ease-in-out 0s 1 normal both running containerLeftSlideIn;
+}
+
+.kl-message-bar-left-slide-out {
+  animation: 400ms ease-in-out 0s 1 normal both running containerLeftSlideOut;
+}
+
+.kl-message-bar-right-slide-in {
+  animation: 400ms ease-in-out 0s 1 normal both running containerRightSlideIn;
+}
+
+.kl-message-bar-right-slide-out {
+  animation: 400ms ease-in-out 0s 1 normal both running containerRightSlideOut;
+}
+
+@keyframes containerLeftSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes containerLeftSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes containerRightSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes containerRightSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/*  sliding animations */
