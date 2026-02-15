@@ -1,0 +1,33 @@
+.label_container {
+  width: fit-content;
+  display: flex;
+  height: fit-content;
+  column-gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-600);
+}
+
+.label_default {
+  border-radius: var(--border-radius-4);
+}
+
+.label_rounded {
+  border-radius: 16px;
+}
+
+.label_success {
+  color: var(--success-base);
+  background-color: var(--success-tint-1);
+}
+
+.label_info {
+  color: var(--info-base);
+  background-color: var(--info-tint-1);
+}
+
+.label_warning {
+  color: var(--warning-base);
+  background-color: var(--warning-tint-1);
+}

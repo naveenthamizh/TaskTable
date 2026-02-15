@@ -1,0 +1,110 @@
+.kl-text-area-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  row-gap: var(--space-8);
+}
+
+.kl-text-area-input-container:not(.kl-text-area-input-container-disabled)
+  > .kl-text-area-input:hover,
+.kl-text-area-input-container:not(.kl-text-area-input-container-disabled)
+  > .kl-text-area-input:focus {
+  border: 1px solid var(--primary-base);
+}
+
+.kl-text-area-input-container:not(.kl-text-area-input-container-disabled)
+  > .kl-text-area-input:active,
+.kl-text-area-input-container:not(.kl-text-area-input-container-disabled)
+  > .kl-text-area-input:focus {
+  box-shadow: 0 0 0 2px var(--primary-tint-2);
+}
+
+.kl-text-area-full-width {
+  width: 100%;
+}
+
+.kl-text-area-input-label {
+  font-weight: var(--font-weight-600);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-color-primary);
+}
+
+.kl-text-area-input-label-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kl-text-area-input-required {
+  color: var(--danger-shade-1);
+}
+
+.kl-text-area-input {
+  -webkit-appearance: none;
+  outline: none;
+  min-height: 96px;
+  padding: var(--space-8);
+  background: #fff;
+  border: 1px solid var(--gray-4);
+  border-radius: 4px;
+  margin: 0;
+  color: var(--text-color-primary);
+}
+
+.kl-text-area-input-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.kl-text-area-input-help-text {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-color-primary);
+}
+
+.kl-text-area-input:hover,
+.kl-text-area-input:focus {
+  border: 1px solid var(--primary-base);
+}
+
+.kl-text-area-input:active,
+.kl-text-area-input:focus {
+  box-shadow: 0 0 0 2px var(--primary-tint-2);
+}
+
+.kl-text-area-input-error {
+  color: var(--danger-shade-1);
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: var(--space-4);
+}
+
+.kl-text-area-input.kl-text-area-input-error-border {
+  border: 1px solid var(--danger-shade-1);
+  margin: 0;
+}
+
+.kl-text-area-input-container-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.kl-text-area-input-container-disabled .kl-text-area-input {
+  background-color: var(--gray-1);
+}
+
+.kl-text-area-input-disabled {
+  background: var(--gray-1);
+  border: 1px solid var(--gray-4);
+  opacity: 0.5;
+}
+
+.kl-text-area-input-warning {
+  background-color: var(--warning-tint-1);
+}
+
+.kl-text-area-input-border-when-hover:not(.kl-text-area-input-border-when-hover:hover) {
+  border: none;
+}

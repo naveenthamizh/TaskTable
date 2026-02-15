@@ -1,0 +1,17 @@
+.kl-select-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  height: fit-content;
+}
+
+.kl-select-right-icon-container {
+  display: flex;
+  align-items: center;
+  column-gap: var(--space-8);
+}
+
+.kl-select-remove {
+  display: flex;
+  cursor: pointer;
+}
