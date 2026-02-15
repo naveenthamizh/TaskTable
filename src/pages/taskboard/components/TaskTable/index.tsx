@@ -130,7 +130,10 @@ export const TaskTable = (): JSX.Element => {
                   />
                 </Table.Cell>
 
-                <Table.Cell className={styles.actionBtn}>
+                <Table.Cell
+                  className={styles.actionBtn}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div
                     onClick={() => {
                       setForm(task);
