@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import isEqual from "lodash/isEqual";
 import { useTaskContext } from "../context/taskcontent";
 import { MOCK_DATA } from "../constants";
 import type { Task, TaskStatus } from "../context/types";
@@ -39,28 +40,14 @@ export const useTasks = () => {
       });
     };
 
-    // initial sync
     syncFilterFromQuery();
 
-    // 🔥 listen to ALL url changes
     window.addEventListener("urlchange", syncFilterFromQuery);
 
     return () => {
       window.removeEventListener("urlchange", syncFilterFromQuery);
     };
   }, []);
-
-  useEffect(() => {
-    const stored_tasks: Task[] | null = LOCAL_STORAGE.get("dashboard_tasks");
-    context?.dispatch?.({
-      type: "SET_TASKS",
-      payload: stored_tasks?.length ? stored_tasks : (MOCK_DATA as Task[]),
-    });
-  }, []);
-
-  useEffect(() => {
-    LOCAL_STORAGE.set("dashboard_tasks", context?.state?.tasks);
-  }, [context?.state?.tasks]);
 
   return {
     taskRef: tasks,

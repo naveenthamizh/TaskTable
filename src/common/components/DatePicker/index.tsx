@@ -21,7 +21,6 @@ export const DatePicker = (props: DatePickerProps) => {
     setDate(value || Date.now());
   }, [value]);
 
-  console.log("[Loggers]", date);
   return (
     <div className={styles.datepicker_container}>
       <div className={styles.datepicker_label_container}>

@@ -96,7 +96,13 @@ export const TaskTable = (): JSX.Element => {
             </Table.Row>
 
             {paginatedTasks.map((task, index) => (
-              <Table.Row key={task.id}>
+              <Table.Row
+                key={task.id}
+                onClick={() => {
+                  setForm(task);
+                  setUIState((p) => ({ ...p, editModal: true }));
+                }}
+              >
                 <Table.Cell>
                   {index + 1 + (page - 1) * ROWS_PER_PAGE}
                 </Table.Cell>

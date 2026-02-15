@@ -1,15 +1,19 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import {
   type TaskContextValue,
   type TaskState,
   type TaskAction,
   type TaskProviderProps,
+  type Task,
 } from "./types";
+import isEqual from "lodash/isEqual";
+import { MOCK_DATA } from "../constants";
+import { LOCAL_STORAGE } from "../utils";
 
 const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 const initialTaskState: TaskState = {
-  tasks: [],
+  tasks: (LOCAL_STORAGE.get("dasboard_tasks") ?? []) as Task[],
   filterStatus: "all",
   sortKey: undefined,
   sortOrder: "asc",
@@ -54,7 +58,19 @@ function taskReducer(state: TaskState, action: TaskAction): TaskState {
 
 export const TaskProvider = (props: TaskProviderProps) => {
   const [state, dispatch] = useReducer(taskReducer, initialTaskState);
-
+  useEffect(() => {
+    const storedTasks: Task[] | null = LOCAL_STORAGE.get("dashboard_tasks");
+    dispatch({
+      type: "SET_TASKS",
+      payload: storedTasks?.length ? storedTasks : (MOCK_DATA as Task[]),
+    });
+  }, []);
+  useEffect(() => {
+    const storedTasks: Task[] | null = LOCAL_STORAGE.get("dashboard_tasks");
+    if (state?.tasks?.length && !isEqual(state.tasks, storedTasks)) {
+      LOCAL_STORAGE.set("dashboard_tasks", state.tasks);
+    }
+  }, [state.tasks]);
   return (
     <TaskContext.Provider value={{ state, dispatch }}>
       {props?.children}

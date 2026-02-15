@@ -13,6 +13,10 @@ import { useTasks } from "../../../../common/hooks/useTasks";
 import type { Task } from "../../../../common/context/types";
 
 import styles from "./formmmodal.module.css";
+import {
+  MESSAGE_BAR_TYPES,
+  showMessageBar,
+} from "../../../../common/components/MessageBar";
 
 type FormModalProps = {
   formType: "create" | "edit";
@@ -59,8 +63,16 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
           status: task?.status || "pending",
         },
       });
+      showMessageBar({
+        type: MESSAGE_BAR_TYPES.SUCCESS,
+        heading: "Task Created Successfully",
+      });
     } else {
       dispatch?.({ type: "UPDATE_TASK", payload: task });
+      showMessageBar({
+        type: MESSAGE_BAR_TYPES.SUCCESS,
+        heading: "Task Updated Successfully",
+      });
     }
     onClose();
   };
@@ -118,7 +130,6 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
           value={task?.dueDate}
           label="Due Date"
           onChange={(value) => {
-            console.log(value);
             if (value) handleTask("dueDate", value);
           }}
           error={errors?.dueDate}
