@@ -1,21 +1,25 @@
-import { useEffect, useMemo, useState, type JSX } from "react";
-import styles from "./tasktable.module.css";
+import { useMemo, useState, type JSX } from "react";
+
+import { IconEdit } from "../../../../common/icons/IconEdit";
+import { IconDelete } from "../../../../common/icons/IconDelete";
+import { IconSort } from "../../../../common/icons/IconSort";
 
 import { Label, LABEL_VARIANTS } from "../../../../common/components/label";
 import { PageSelector } from "../../../../common/components/pagination";
 import { Table } from "../../../../common/components/table";
-import { getTimeFormat, getTitle } from "../../../../common/utils";
-import { useTasks } from "../../../../common/hooks/useTasks";
-import { TaskBoardActions } from "../TaskboardActions";
-import { IconSort } from "../../../../common/icons/IconSort";
-import type { Task, TaskStatus } from "../../../../common/context/types";
-import { FormModal } from "../FormModal";
-import { Modal, MODAL_TYPES } from "../../../../common/components/Modal";
-import { filter_options } from "../../../../common/constants";
-import { IconEdit } from "../../../../common/icons/IconEdit";
-import { IconDelete } from "../../../../common/icons/IconDelete";
 import { Button, BUTTON_TYPES } from "../../../../common/components/Button";
 import { RenderWhen } from "../../../../common/hoc/Renderwhen";
+
+import { getTimeFormat, getTitle } from "../../../../common/utils";
+import { useTasks } from "../../../../common/hooks/useTasks";
+import { filter_options } from "../../../../common/constants";
+
+import { DeleteTaskModal, FormModal } from "../FormModal";
+import { TaskBoardActions } from "../TaskboardActions";
+
+import type { Task } from "../../../../common/context/types";
+
+import styles from "./tasktable.module.css";
 
 const table_header = [
   { value: "selector", label: "#" },
@@ -26,82 +30,40 @@ const table_header = [
   { value: "action", label: "Action" },
 ];
 
-type SortKey = "createdAt" | "dueDate" | "filterBy";
-type SortOrder = "asc" | "desc" | TaskStatus;
-
 const ROWS_PER_PAGE = 10;
 
 export const TaskTable = (): JSX.Element => {
-  const { tasks, dispatch } = useTasks();
+  const { tasks, dispatch, state } = useTasks();
 
-  const [tableState, setTableState] = useState({
-    page: 1,
-    sort: "asc" as SortOrder,
-    status: filter_options[0],
-  });
-
-  const [taskState, setTaskState] = useState<{
-    modifiedTask: Task[];
-    form?: Task;
-  }>({
-    modifiedTask: [],
-  });
-
+  const [page, setPage] = useState(1);
+  const [form, setForm] = useState<Task | undefined>();
   const [uiState, setUIState] = useState({
     deleteModal: false,
     editModal: false,
     createModal: false,
   });
 
-  useEffect(() => {
-    setTaskState((prev) => ({
-      ...prev,
-      modifiedTask: tasks || [],
-    }));
-  }, [tasks]);
-
-  const sortFilterBy = (key: SortKey, order: SortOrder) => {
-    setTableState((prev) => ({ ...prev, page: 1 }));
-
-    if (key === "filterBy") {
-      const updated =
-        order === "all"
-          ? tasks || []
-          : tasks?.filter((item) => item.status === order) || [];
-
-      setTaskState((prev) => ({
-        ...prev,
-        modifiedTask: updated,
-      }));
-      return;
-    }
-
-    setTableState((prev) => ({ ...prev, sort: order }));
-
-    setTaskState((prev) => {
-      const sorted = [...prev.modifiedTask].sort((a, b) =>
-        order === "asc" ? a[key] - b[key] : b[key] - a[key],
-      );
-      return { ...prev, modifiedTask: sorted };
-    });
-  };
-
   const paginatedTasks = useMemo(() => {
-    const start = (tableState.page - 1) * ROWS_PER_PAGE;
-    return taskState.modifiedTask.slice(start, start + ROWS_PER_PAGE);
-  }, [taskState.modifiedTask, tableState.page]);
+    const start = (page - 1) * ROWS_PER_PAGE;
+    return tasks.slice(start, start + ROWS_PER_PAGE);
+  }, [tasks, page]);
 
   return (
     <>
       <TaskBoardActions
-        status={tableState.status}
+        status={
+          filter_options.find((opt) => opt.value === state?.filterStatus) ||
+          filter_options[0]
+        }
         setStatus={(value) => {
-          setTableState((prev) => ({ ...prev, status: value }));
-          sortFilterBy("filterBy", value?.value);
+          setPage(1);
+          dispatch?.({
+            type: "SET_FILTER",
+            payload: value.value,
+          });
         }}
       />
-
-      {taskState.modifiedTask.length ? (
+      <RenderWhen.If isTrue={!!state?.tasks?.length}>
         <div className={styles.taskboard_tableContainer}>
           <Table
             gridTemplateColumns={`50px repeat(${table_header.length - 1},minmax(250px,1fr))`}
@@ -110,19 +72,23 @@ export const TaskTable = (): JSX.Element => {
               {table_header.map((header) => (
                 <Table.Cell key={header.value}>
                   <div className={styles.header_container}>
-                    <div>{header.label}</div>
+                    <span>{header.label}</span>
                     {header.sort && (
-                      <div
+                      <span
                         className={styles.iconSort}
                         onClick={() =>
-                          sortFilterBy(
-                            header.value as SortKey,
-                            tableState.sort === "asc" ? "desc" : "asc",
-                          )
+                          dispatch?.({
+                            type: "SET_SORT",
+                            payload: {
+                              key: header.value as "createdAt" | "dueDate",
+                              order:
+                                state?.sortOrder === "asc" ? "desc" : "asc",
+                            },
+                          })
                         }
                       >
                         <IconSort size="14" />
-                      </div>
+                      </span>
                     )}
                   </div>
                 </Table.Cell>
@@ -130,15 +96,9 @@ export const TaskTable = (): JSX.Element => {
             </Table.Row>
 
             {paginatedTasks.map((task, index) => (
-              <Table.Row
-                key={task.id}
-                onClick={() => {
-                  setTaskState((prev) => ({ ...prev, form: task }));
-                  setUIState((prev) => ({ ...prev, editModal: true }));
-                }}
-              >
+              <Table.Row key={task.id}>
                 <Table.Cell>
-                  {index + 1 + (tableState.page - 1) * ROWS_PER_PAGE}
+                  {index + 1 + (page - 1) * ROWS_PER_PAGE}
                 </Table.Cell>
 
                 <Table.Cell>
@@ -164,22 +124,19 @@ export const TaskTable = (): JSX.Element => {
                   />
                 </Table.Cell>
 
-                <Table.Cell
-                  className={styles.actionBtn}
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <Table.Cell className={styles.actionBtn}>
                   <div
                     onClick={() => {
-                      setTaskState((prev) => ({ ...prev, form: task }));
-                      setUIState((prev) => ({ ...prev, editModal: true }));
+                      setForm(task);
+                      setUIState((p) => ({ ...p, editModal: true }));
                     }}
                   >
                     <IconEdit size="14" />
                   </div>
                   <div
                     onClick={() => {
-                      setTaskState((prev) => ({ ...prev, form: task }));
-                      setUIState((prev) => ({ ...prev, deleteModal: true }));
+                      setForm(task);
+                      setUIState((p) => ({ ...p, deleteModal: true }));
                     }}
                   >
                     <IconDelete />
@@ -190,78 +147,51 @@ export const TaskTable = (): JSX.Element => {
           </Table>
 
           <PageSelector
-            totalPages={Math.ceil(
-              taskState.modifiedTask.length / ROWS_PER_PAGE,
-            )}
-            currentPage={tableState.page}
-            onPageChange={(page) =>
-              setTableState((prev) => ({ ...prev, page }))
-            }
+            totalPages={Math.ceil(tasks.length / ROWS_PER_PAGE)}
+            currentPage={page}
+            onPageChange={setPage}
             siblingCount={1}
           />
         </div>
-      ) : (
+      </RenderWhen.If>
+      <RenderWhen.If isTrue={!state?.tasks?.length}>
         <div className={styles.emptyState}>
-          <RenderWhen.If isTrue={!tasks?.length}>
+          <RenderWhen.If isTrue={!state?.tasks.length}>
             <>
               <div>Uh-oh, Task's Not found</div>
               <Button
                 type={BUTTON_TYPES.PRIMARY}
-                onClick={() =>
-                  setUIState((prev) => ({ ...prev, createModal: true }))
-                }
+                onClick={() => setUIState((p) => ({ ...p, createModal: true }))}
               >
                 Create Task
               </Button>
             </>
           </RenderWhen.If>
-          <RenderWhen.If isTrue={!!tasks?.length}>
-            <RenderWhen.If isTrue={!taskState?.modifiedTask?.length}>
-              <div>{tableState.status.label} task doesn't exist</div>
-            </RenderWhen.If>
+          <RenderWhen.If isTrue={!!state?.tasks.length}>
+            <div>No tasks for selected filter</div>
           </RenderWhen.If>
         </div>
-      )}
-
+      </RenderWhen.If>
       {uiState.editModal && (
         <FormModal
           formType="edit"
-          formData={taskState.form}
-          onClose={() => {
-            setTaskState((prev) => ({ ...prev, form: undefined }));
-            setUIState((prev) => ({ ...prev, editModal: false }));
-          }}
+          formData={form}
+          onClose={() => setUIState((p) => ({ ...p, editModal: false }))}
         />
       )}
 
       {uiState.createModal && (
         <FormModal
           formType="create"
-          onClose={() =>
-            setUIState((prev) => ({ ...prev, createModal: false }))
-          }
+          onClose={() => setUIState((p) => ({ ...p, createModal: false }))}
         />
       )}
 
       {uiState.deleteModal && (
-        <Modal
-          open
-          title="Delete Task"
-          okText="Delete"
-          type={MODAL_TYPES.DANGER}
-          onOK={() => {
-            dispatch?.({
-              type: "DELETE_TASK",
-              payload: { id: taskState.form?.id || "" },
-            });
-            setUIState((prev) => ({ ...prev, deleteModal: false }));
-          }}
-          onClose={() =>
-            setUIState((prev) => ({ ...prev, deleteModal: false }))
-          }
-        >
-          Are you sure want to delete task?
-        </Modal>
+        <DeleteTaskModal
+          id={form?.id || ""}
+          onClose={() => setUIState((p) => ({ ...p, deleteModal: false }))}
+        />
       )}
     </>
   );

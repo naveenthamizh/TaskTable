@@ -9,17 +9,25 @@ export interface Task {
   createdAt: number;
 }
 
-export type TaskFilterStatus = TaskStatus | "ALL";
+type SortKey = "createdAt" | "dueDate";
+
+export type TaskState = {
+  tasks: Task[];
+  filterStatus: TaskStatus;
+  sortKey?: SortKey;
+  sortOrder: "asc" | "desc";
+};
 
 export type TaskAction =
+  | { type: "SET_TASKS"; payload: Task[] }
   | { type: "ADD_TASK"; payload: Task }
   | { type: "UPDATE_TASK"; payload: Task }
   | { type: "DELETE_TASK"; payload: { id: string } }
-  | { type: "SET_TASKS"; payload: Task[] };
-
-export interface TaskState {
-  tasks: Task[];
-}
+  | { type: "SET_FILTER"; payload: TaskStatus }
+  | {
+      type: "SET_SORT";
+      payload: { key: SortKey; order: "asc" | "desc" };
+    };
 
 export interface TaskContextValue {
   state: TaskState;

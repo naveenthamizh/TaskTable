@@ -38,19 +38,19 @@ export const count_dashboard_list: Array<{
 ];
 
 export const CountDashboard = (): JSX.Element => {
-  const { tasks } = useTasks();
+  const { taskRef } = useTasks();
 
   const status_counts = useMemo(() => {
     const taskCount = (type: TaskStatus) =>
-      tasks?.filter((item) => item.status === type)?.length;
+      taskRef?.filter((item) => item.status === type)?.length;
 
     return {
       pending: taskCount("pending") || 0,
       completed: taskCount("completed") || 0,
       in_progress: taskCount("in_progress") || 0,
-      all: tasks?.length || 0,
+      all: taskRef?.length || 0,
     };
-  }, [tasks]);
+  }, [taskRef]);
 
   const updateQuery = (status?: TaskStatus) => {
     const url = new URL(window.location.href);

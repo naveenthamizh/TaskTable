@@ -10,9 +10,12 @@ const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 const initialTaskState: TaskState = {
   tasks: [],
+  filterStatus: "all",
+  sortKey: undefined,
+  sortOrder: "asc",
 };
 
-export function taskReducer(state: TaskState, action: TaskAction): TaskState {
+function taskReducer(state: TaskState, action: TaskAction): TaskState {
   switch (action.type) {
     case "SET_TASKS":
       return { ...state, tasks: action.payload };
@@ -32,6 +35,16 @@ export function taskReducer(state: TaskState, action: TaskAction): TaskState {
       return {
         ...state,
         tasks: state.tasks.filter((task) => task.id !== action.payload.id),
+      };
+
+    case "SET_FILTER":
+      return { ...state, filterStatus: action.payload };
+
+    case "SET_SORT":
+      return {
+        ...state,
+        sortKey: action.payload.key,
+        sortOrder: action.payload.order,
       };
 
     default:

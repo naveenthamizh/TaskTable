@@ -2,7 +2,7 @@ import { useState, type JSX } from "react";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
 
-import { Modal } from "../../../../common/components/Modal";
+import { Modal, MODAL_TYPES } from "../../../../common/components/Modal";
 import { TextInput } from "../../../../common/components/TextInput";
 import { TextAreaInput } from "../../../../common/components/TextAreaInput";
 import { DatePicker } from "../../../../common/components/DatePicker";
@@ -137,6 +137,42 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
             handleTask("status", value?.value);
           }}
         />
+      </div>
+    </Modal>
+  );
+};
+
+type DeleteTaskModalProps = {
+  onClose: () => void;
+  id: string;
+};
+
+export const DeleteTaskModal = (props: DeleteTaskModalProps) => {
+  const { onClose, id } = props;
+  const { dispatch } = useTasks();
+  return (
+    <Modal
+      open
+      title="Delete Task"
+      okText="Delete"
+      closable
+      type={MODAL_TYPES.DANGER}
+      onClose={() => {
+        onClose();
+      }}
+      onCancel={() => {
+        onClose();
+      }}
+      onOK={() => {
+        dispatch?.({
+          type: "DELETE_TASK",
+          payload: { id: id || "" },
+        });
+        onClose();
+      }}
+    >
+      <div className={styles.modal_container}>
+        Are you sure want to delete task?
       </div>
     </Modal>
   );
