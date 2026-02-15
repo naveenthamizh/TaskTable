@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { JSX } from "react";
 interface IconWarningProps {
   size?: string;
   color?: string;

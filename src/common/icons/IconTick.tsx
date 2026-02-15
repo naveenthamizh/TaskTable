@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from "react";
+import React, { type JSX } from "react";
 
 interface IconTickInterface {
   size?: string;
