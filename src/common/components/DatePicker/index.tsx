@@ -8,11 +8,12 @@ type DatePickerProps = {
   value?: number;
   required?: boolean;
   error?: string;
+  tabIndex?: number;
   onChange?: (value: number | undefined) => void;
 };
 
 export const DatePicker = (props: DatePickerProps) => {
-  const { label, value, required, error, onChange } = props;
+  const { label, value, required, error, tabIndex, onChange } = props;
   const today = dayjs().format("YYYY-MM-DD");
 
   const [date, setDate] = useState<number>(Date.now());
@@ -34,6 +35,7 @@ export const DatePicker = (props: DatePickerProps) => {
       <div className={styles.datepicker_wrapper}>
         <input
           type="date"
+          tabIndex={tabIndex}
           min={today}
           value={dayjs(value || date).format("YYYY-MM-DD")}
           className={classNames({

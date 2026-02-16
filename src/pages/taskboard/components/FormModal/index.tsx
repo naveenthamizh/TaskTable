@@ -114,6 +114,7 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
     >
       <div className={styles.modal_container}>
         <TextInput
+          tabIndex={1}
           label="Name"
           required
           value={task?.title}
@@ -121,12 +122,14 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
           error={errors?.title}
         />
         <TextAreaInput
+          tabIndex={2}
           label="Description"
           value={task?.description}
           onBlur={(value) => handleTask("description", value)}
         />
         <DatePicker
           required
+          tabIndex={3}
           value={task?.dueDate}
           label="Due Date"
           onChange={(value) => {
@@ -135,6 +138,7 @@ export const FormModal = (props: FormModalProps): JSX.Element => {
           error={errors?.dueDate}
         />
         <SingleSelect
+          tabIndex={4}
           label="Status"
           placeholder="Select status"
           value={
