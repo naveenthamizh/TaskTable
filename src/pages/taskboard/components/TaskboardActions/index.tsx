@@ -20,6 +20,7 @@ export const TaskBoardActions = (props: TaskActionProps): JSX.Element => {
     <section className={styles.taskboard_content_header}>
       <div className={styles.taskboard_header_menu}>
         <SingleSelect
+          tabIndex={-1}
           fullWidth
           minWidth=""
           placeholder="Filter by status"
